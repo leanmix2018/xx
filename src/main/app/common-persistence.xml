@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+
+    <flow name="common-request-persistence">
+        <flow-ref name="common-db" doc:name="common-db"/>
+        <flow-ref name="common-messaging" doc:name="common-messaging"/>
+        <dw:transform-message doc:name="Set Request">
+            <dw:set-payload resource="classpath:ggg-request.dwl"/>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Log Request" message="#[payload]"/>
+    </flow>
+
+    <flow name="common-response-persistence">
+        <flow-ref name="common-db" doc:name="common-db"/>
+        <flow-ref name="common-messaging" doc:name="common-messaging"/>
+        <dw:transform-message doc:name="Set Response">
+            <dw:set-payload resource="classpath:ggg-response.dwl"/>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Log Response" message="#[payload]"/>
+    </flow>
+</mule>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:common-exception-strategy.xml"/>
+        <spring:import resource="classpath:common-messaging.xml"/>
+        <spring:import resource="classpath:common-db.xml"/>
+        <spring:import resource="classpath:common-persistence.xml"/>
+        <spring:import resource="classpath:common-properties.xml"/>
+        <spring:import resource="classpath:def.xml"/>
+        <spring:import resource="classpath:prodts.xml"/>
+    </spring:beans>
+    <munit:test name="prodts-test-suite-Test" description="Test">
+        <mock:when messageProcessor=".*:.*" doc:name="Mock common-outbound">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['def']"/>
+            </mock:with-attributes>
+            <mock:then-return payload="#[{}]"/>
+        </mock:when>
+        <mock:when messageProcessor=".*:.*" doc:name="Mock setting the root message">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['Set Payload']"/>
+            </mock:with-attributes>
+            <mock:then-return payload="#[{}]"/>
+        </mock:when>
+        <mock:when messageProcessor=".*:.*" doc:name="Mock Transform Request">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['Transform Request']"/>
+            </mock:with-attributes>
+            <mock:then-return payload="#[]"/>
+        </mock:when>
+        <mock:when messageProcessor=".*:.*" doc:name="Mock Transform Response">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['Transform Response']"/>
+            </mock:with-attributes>
+            <mock:then-return payload="#[]"/>
+        </mock:when>
+        <flow-ref name="prodts" doc:name="Flow-ref to prodts"/>
+        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call to set request">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['prodts-set-request']"/>
+            </mock:with-attributes>
+        </mock:verify-call>
+        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call to common-outbound">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['def']"/>
+            </mock:with-attributes>
+        </mock:verify-call>
+        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call to set resonse">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['prodts-set-response']"/>
+            </mock:with-attributes>
+        </mock:verify-call>
+    </munit:test>
+</mule>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:context="http://www.springframework.org/schema/context" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd">
+
+    <flow name="prodts">
+        <flow-ref name="prodts-set-request" doc:name="prodts-set-request"/>
+        <dw:transform-message doc:name="Transform Request">
+            <dw:set-payload resource="prodts-request.dwl"></dw:set-payload>
+        </dw:transform-message>
+        <flow-ref name="def" doc:name="def"/>
+        <dw:transform-message doc:name="Transform Response">
+            <dw:set-payload resource="prodts-response.dwl"></dw:set-payload>
+        </dw:transform-message>
+        <flow-ref name="prodts-set-response" doc:name="prodts-set-response"/>
+    </flow>
+    <flow name="prodts-set-request" >
+        <logger message="prodts-set-request" level="INFO" doc:name="Log prodts-set-request"/>
+        <message-properties-transformer doc:name="Common Outbound Message Properties">
+            <add-message-property key="operation" value="${prodts.operation}"/>
+
+        </message-properties-transformer>
+    </flow>
+    <flow name="prodts-set-response">
+        <logger message="prodts-set-response" level="INFO" doc:name="Log prodts-set-response"/>
+    </flow>
+</mule>

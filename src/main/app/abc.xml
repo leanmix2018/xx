@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:context="http://www.springframework.org/schema/context" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd">
+
+    <sfdc:config name="abc-config" username="${abc.username}" password="${abc.password}" securityToken="${abc.token}" doc:name="Salesforce: Basic Authentication"/>
+
+    <flow name="abc">
+        <choice doc:name="Salesforce Operation">
+            <when expression="#[message.outboundProperties.operation == &quot;create&quot;]">
+                <sfdc:create config-ref="abc-config" type="#[message.outboundProperties.objectType]" doc:name="create">
+                    <sfdc:objects ref="#[payload]"/>
+                </sfdc:create>
+            </when>
+            <otherwise>
+                <sfdc:query config-ref="abc-config" query="#[payload]" doc:name="query"/>
+            </otherwise>
+        </choice>
+    </flow>
+</mule>
